@@ -10,7 +10,7 @@ namespace ContosoUniversity
     {
         protected void Application_Start()
         {
-            Database.SetInitializer(new DropCreateDatabaseAlways<SchoolContext>());
+            Database.SetInitializer(new DropCreateDatabaseIfModelChanges<SchoolContext>());
             var context=new SchoolContext();
             context.Database.Initialize(true);
 

@@ -1,6 +1,4 @@
-﻿using System.Data.Entity;
-using System.Linq;
-using System.Net;
+﻿using System.Linq;
 using System.Web.Mvc;
 using ContosoUniversity.DAL;
 using ContosoUniversity.Models;
@@ -9,22 +7,16 @@ namespace ContosoUniversity.Controllers
 {
     public class StudentController : Controller
     {
-        private SchoolContext db = new SchoolContext();
+        private StudentRepository _repository = new StudentRepository();
 
-        // GET: Student
         public ActionResult Index()
         {
-            return View(db.Students.ToList());
+            return View(_repository.GetAll().ToList());
         }
 
-        // GET: Student/Details/5
-        public ActionResult Details(int? id)
+        public ActionResult Details(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Student student = db.Students.Find(id);
+            var student = _repository.Get(id);
             if (student == null)
             {
                 return HttpNotFound();
@@ -32,37 +24,28 @@ namespace ContosoUniversity.Controllers
             return View(student);
         }
 
-        // GET: Student/Create
         public ActionResult Create()
         {
             return View();
         }
 
-        // POST: Student/Create
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create([Bind(Include = "Id,LastName,FirstMidName,EnrollmentDate")] Student student)
         {
             if (ModelState.IsValid)
             {
-                db.Students.Add(student);
-                db.SaveChanges();
+                _repository.Add(student);
+                _repository.SaveChanges();
                 return RedirectToAction("Index");
-            }
 
+            }
             return View(student);
         }
 
-        // GET: Student/Edit/5
-        public ActionResult Edit(int? id)
+        public ActionResult Edit(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Student student = db.Students.Find(id);
+            var student = _repository.Get(id);
             if (student == null)
             {
                 return HttpNotFound();
@@ -70,30 +53,22 @@ namespace ContosoUniversity.Controllers
             return View(student);
         }
 
-        // POST: Student/Edit/5
-        // To protect from overposting attacks, please enable the specific properties you want to bind to, for 
-        // more details see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,LastName,FirstMidName,EnrollmentDate")] Student student)
         {
             if (ModelState.IsValid)
             {
-                db.Entry(student).State = EntityState.Modified;
-                db.SaveChanges();
+                _repository.SetModifiedState(student);
+                _repository.SaveChanges();
                 return RedirectToAction("Index");
             }
             return View(student);
         }
 
-        // GET: Student/Delete/5
-        public ActionResult Delete(int? id)
+        public ActionResult Delete(int id)
         {
-            if (id == null)
-            {
-                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
-            }
-            Student student = db.Students.Find(id);
+            var student = _repository.Get(id);
             if (student == null)
             {
                 return HttpNotFound();
@@ -101,24 +76,14 @@ namespace ContosoUniversity.Controllers
             return View(student);
         }
 
-        // POST: Student/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public ActionResult DeleteConfirmed(int id)
         {
-            Student student = db.Students.Find(id);
-            db.Students.Remove(student);
-            db.SaveChanges();
+            var student = _repository.Get(id);
+            _repository.Remove(student);
+            _repository.SaveChanges();
             return RedirectToAction("Index");
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                db.Dispose();
-            }
-            base.Dispose(disposing);
         }
     }
 }
