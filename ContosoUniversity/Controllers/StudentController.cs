@@ -1,7 +1,7 @@
 ﻿using System.Linq;
 using System.Web.Mvc;
-using ContosoUniversity.DAL;
 using ContosoUniversity.Models;
+using ContosoUniversity.DAL;
 
 namespace ContosoUniversity.Controllers
 {
@@ -31,15 +31,22 @@ namespace ContosoUniversity.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,LastName,FirstMidName,EnrollmentDate")] Student student)
+        public ActionResult Create([Bind(Include = "LastName,FirstMidName,EnrollmentDate")] Student student)
         {
-            if (ModelState.IsValid)
+            try
             {
-                _repository.Add(student);
-                _repository.SaveChanges();
-                return RedirectToAction("Index");
-
+                if (ModelState.IsValid)
+                {
+                    _repository.Add(student);
+                    _repository.SaveChanges();
+                    return RedirectToAction("Index");
+                }
             }
+            catch (System.Exception)
+            {
+                ModelState.AddModelError("", "Unable to save changes. Try again, and if the problem persists see your system administrator.");
+            }
+
             return View(student);
         }
 
@@ -53,7 +60,7 @@ namespace ContosoUniversity.Controllers
             return View(student);
         }
 
-        [HttpPost]
+        [HttpPost, ActionName("Edit")]
         [ValidateAntiForgeryToken]
         public ActionResult Edit([Bind(Include = "Id,LastName,FirstMidName,EnrollmentDate")] Student student)
         {

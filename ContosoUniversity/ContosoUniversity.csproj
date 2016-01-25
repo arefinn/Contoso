@@ -178,6 +178,10 @@
     <Compile Include="Migrations\201512141954446_InitialCreate.Designer.cs">
       <DependentUpon>201512141954446_InitialCreate.cs</DependentUpon>
     </Compile>
+    <Compile Include="Migrations\201512200725482_shshs.cs" />
+    <Compile Include="Migrations\201512200725482_shshs.Designer.cs">
+      <DependentUpon>201512200725482_shshs.cs</DependentUpon>
+    </Compile>
     <Compile Include="Migrations\Configuration.cs" />
     <Compile Include="Models\Course.cs" />
     <Compile Include="Models\Enrollment.cs" />
@@ -240,6 +244,9 @@
   <ItemGroup>
     <EmbeddedResource Include="Migrations\201512141954446_InitialCreate.resx">
       <DependentUpon>201512141954446_InitialCreate.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Migrations\201512200725482_shshs.resx">
+      <DependentUpon>201512200725482_shshs.cs</DependentUpon>
     </EmbeddedResource>
   </ItemGroup>
   <PropertyGroup>
